@@ -1,8 +1,8 @@
 module Calc exposing (main, last, linearPricesOfYear, linearPrices, balanceFromPrices)
 
 import Browser
-import Html exposing (Attribute, Html, br, div, input, label, text)
-import Html.Attributes exposing (for, id, placeholder, value)
+import Html exposing (Html, br, div, input, label, text)
+import Html.Attributes exposing (for, id, value)
 import Html.Events exposing (onInput)
 import Array
 
@@ -104,12 +104,16 @@ view : Model -> Html Msg
 view model =
     div []
         [ label [ for "rate" ] [ text "Interest rate in %" ]
+        , br [] []
         , input [ id "rate", value (String.fromFloat model.rate), onInput ChangedRate ] []
         , br [] []
         , label [ for "regpay" ] [ text "Regular payments" ]
+        , br [] []
         , input [ id "regpay", value (String.fromFloat model.regularPayment), onInput ChangedRegPay ] []
         , br [] []
         , label [ for "years" ] [ text "Years" ]
+        , br [] []
         , input [ id "years", value (String.fromInt model.nYears), onInput ChangedYears ] []
+        , br [] []
         , div [] [ text (String.fromFloat (finalBalance (1 + (model.rate / 100)) model.regularPayment model.nYears)) ]
         ]
