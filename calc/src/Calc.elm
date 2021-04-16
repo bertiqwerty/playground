@@ -109,7 +109,7 @@ view model =
         , br [] []
         , input [ id "rate", value (String.fromFloat model.rate), onInput ChangedRate ] []
         , br [] []
-        , label [ for "regpay" ] [ text "Regular payments" ]
+        , label [ for "regpay" ] [ text "Monthly payments" ]
         , br [] []
         , input [ id "regpay", value (String.fromFloat model.regularPayment), onInput ChangedRegPay ] []
         , br [] []
