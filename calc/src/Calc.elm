@@ -27,7 +27,9 @@ init =
 
 last : List Float -> Float
 last inputs =
-    Array.fromList inputs |> Array.get (List.length inputs - 1) |> Maybe.withDefault -1 
+    Array.fromList inputs 
+    |> Array.get (List.length inputs - 1) 
+    |> Maybe.withDefault -1 
 
 
 linearPrices : Float -> Int -> Float -> List Float
