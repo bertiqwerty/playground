@@ -2,8 +2,8 @@ module Calc exposing (balanceFromPrices, last, linearPrices, linearPricesOfYear,
 
 import Array
 import Browser
-import Html exposing (Html, br, div, input, label, text)
-import Html.Attributes exposing (for, id, value)
+import Html exposing (Html, br, div, input, label, span, text)
+import Html.Attributes exposing (for, id, style, value)
 import Html.Events exposing (onInput)
 
 
@@ -36,8 +36,8 @@ last inputs =
 linearPrices : Float -> Int -> Float -> List Float
 linearPrices rate nYears startPrice =
     let
-        rec : Int -> List Float -> List Float
-        rec y prices =
+        recurse : Int -> List Float -> List Float
+        recurse y prices =
             let
                 newPrices =
                     if y < nYears then
@@ -47,12 +47,12 @@ linearPrices rate nYears startPrice =
                         []
             in
             if y < nYears then
-                newPrices ++ rec (y + 1) newPrices
+                newPrices ++ recurse (y + 1) newPrices
 
             else
                 []
     in
-    rec 0 [ startPrice ]
+    recurse 0 [ startPrice ]
 
 
 linearPricesOfYear : Float -> Float -> List Float
@@ -154,12 +154,17 @@ view model =
             ]
             []
         , br [] []
-        , div []
+        , div [ style "font-weight" "bold" ]
             [ text
                 (String.fromFloat
-                    (finalBalance (1 + (model.rate / 100))
+                    ((finalBalance (1 + (model.rate / 100))
                         model.regularPayment
                         model.nYears
+                        * 100
+                        |> round
+                        |> toFloat
+                     )
+                        / 100
                     )
                 )
             ]
