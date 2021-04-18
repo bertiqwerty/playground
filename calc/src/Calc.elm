@@ -40,11 +40,7 @@ linearPrices rate nYears startPrice =
         recurse y prices =
             let
                 newPrices =
-                    if y < nYears then
-                        linearPricesOfYear rate (last prices)
-
-                    else
-                        []
+                    linearPricesOfYear rate (last prices)
             in
             if y < nYears then
                 newPrices ++ recurse (y + 1) newPrices
