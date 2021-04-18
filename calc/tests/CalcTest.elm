@@ -1,8 +1,7 @@
-module Example exposing (..)
+module CalcTest exposing (..)
 
 import Calc exposing (..)
-import Expect exposing (Expectation)
-import Fuzz exposing (Fuzzer, int, list, string)
+import Expect
 import Test exposing (..)
 
 
@@ -10,7 +9,7 @@ testLast : Test
 testLast =
     describe "last"
         [ test "last with 2 elts"
-            (\_ -> Expect.equal (last [ 0, 4 ]) 4)
+            (\_ -> Expect.equal (Debug.log "last of [0, 4]" (last [ 0, 4 ])) 4)
         , test "last with 1 elts"
             (\_ -> Expect.equal (last [ 4 ]) 4)
         , test "last with 10 elts"

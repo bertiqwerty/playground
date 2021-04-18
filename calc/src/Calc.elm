@@ -1,10 +1,11 @@
-module Calc exposing (main, last, linearPricesOfYear, linearPrices, balanceFromPrices)
+module Calc exposing (balanceFromPrices, last, linearPrices, linearPricesOfYear, main)
 
+import Array
 import Browser
 import Html exposing (Html, br, div, input, label, text)
 import Html.Attributes exposing (for, id, value)
 import Html.Events exposing (onInput)
-import Array
+
 
 main =
     Browser.sandbox { init = init, update = update, view = view }
@@ -27,9 +28,9 @@ init =
 
 last : List Float -> Float
 last inputs =
-    Array.fromList inputs 
-    |> Array.get (List.length inputs - 1) 
-    |> Maybe.withDefault -1 
+    Array.fromList inputs
+        |> Array.get (List.length inputs - 1)
+        |> Maybe.withDefault -1
 
 
 linearPrices : Float -> Int -> Float -> List Float
@@ -39,11 +40,19 @@ linearPrices rate nYears startPrice =
         rec y prices =
             let
                 new_prices =
-                    if y < nYears then linearPricesOfYear rate (last prices) else []
+                    if y < nYears then
+                        linearPricesOfYear rate (last prices)
+
+                    else
+                        []
             in
-            if y < nYears then new_prices ++ (rec (y + 1) new_prices) else []
+            if y < nYears then
+                new_prices ++ rec (y + 1) new_prices
+
+            else
+                []
     in
-    rec 0 [startPrice]
+    rec 0 [ startPrice ]
 
 
 linearPricesOfYear : Float -> Float -> List Float
@@ -66,9 +75,10 @@ balanceFromPrices payments prices =
         payces =
             List.map2 Tuple.pair payments prices
     in
-    
-    (last prices) * (List.map (\( pa, pr ) -> pa / pr) payces
-        |> List.sum)
+    last prices
+        * (List.map (\( pa, pr ) -> pa / pr) payces
+            |> List.sum
+          )
 
 
 finalBalance : Float -> Float -> Int -> Float
@@ -93,13 +103,25 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         ChangedRate newContent ->
-            { model | rate = Maybe.withDefault 0 (String.toFloat newContent) }
+            { model
+                | rate =
+                    String.toFloat newContent
+                        |> Maybe.withDefault 0
+            }
 
         ChangedRegPay newContent ->
-            { model | regularPayment = Maybe.withDefault 0 (String.toFloat newContent) }
+            { model
+                | regularPayment =
+                    String.toFloat newContent
+                        |> Maybe.withDefault 0
+            }
 
         ChangedYears newContent ->
-            { model | nYears = Maybe.withDefault 0 (String.toInt newContent) }
+            { model
+                | nYears =
+                    String.toInt newContent
+                        |> Maybe.withDefault 0
+            }
 
 
 view : Model -> Html Msg
@@ -107,15 +129,38 @@ view model =
     div []
         [ label [ for "rate" ] [ text "Interest rate in %" ]
         , br [] []
-        , input [ id "rate", value (String.fromFloat model.rate), onInput ChangedRate ] []
+        , input
+            [ id "rate"
+            , value (String.fromFloat model.rate)
+            , onInput ChangedRate
+            ]
+            []
         , br [] []
-        , label [ for "regpay" ] [ text "Monthly payments" ]
+        , label [ for "regpay" ] [ text "Payment each month" ]
         , br [] []
-        , input [ id "regpay", value (String.fromFloat model.regularPayment), onInput ChangedRegPay ] []
+        , input
+            [ id "regpay"
+            , value (String.fromFloat model.regularPayment)
+            , onInput ChangedRegPay
+            ]
+            []
         , br [] []
         , label [ for "years" ] [ text "Years" ]
         , br [] []
-        , input [ id "years", value (String.fromInt model.nYears), onInput ChangedYears ] []
+        , input
+            [ id "years"
+            , value (String.fromInt model.nYears)
+            , onInput ChangedYears
+            ]
+            []
         , br [] []
-        , div [] [ text (String.fromFloat (finalBalance (1 + (model.rate / 100)) model.regularPayment model.nYears)) ]
+        , div []
+            [ text
+                (String.fromFloat
+                    (finalBalance (1 + (model.rate / 100))
+                        model.regularPayment
+                        model.nYears
+                    )
+                )
+            ]
         ]
