@@ -39,7 +39,7 @@ linearPrices rate nYears startPrice =
         rec : Int -> List Float -> List Float
         rec y prices =
             let
-                new_prices =
+                newPrices =
                     if y < nYears then
                         linearPricesOfYear rate (last prices)
 
@@ -47,7 +47,7 @@ linearPrices rate nYears startPrice =
                         []
             in
             if y < nYears then
-                new_prices ++ rec (y + 1) new_prices
+                newPrices ++ rec (y + 1) newPrices
 
             else
                 []
