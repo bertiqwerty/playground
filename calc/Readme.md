@@ -5,4 +5,4 @@ mini test project. You pass the annual interest rate, the monthly savings rate, 
 number of savings years and it spits out the account balance at the end of the savings 
 period.
 
-Try out here https://www.ninety.de/log/index.php/en/2021/04/19/first-steps-towards-dynamic-web-apps-in-elm/
+Try out here https://www.ninety.de/log/index.php/2021/04/19/
