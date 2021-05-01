@@ -23,4 +23,4 @@ savings rate regPay nYears =
 
 main : Program () Model Msg
 main =
-    Browser.sandbox { init = init, update = update, view = makeView savings}
+    Browser.sandbox { init = init, update = update, view = makeView savings "Savings plan"}

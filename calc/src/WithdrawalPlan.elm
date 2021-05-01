@@ -22,5 +22,5 @@ main =
     Browser.sandbox
         { init = init
         , update = update
-        , view = makeView (\rate regPay nYears -> seedCapitalNeeded rate regPay (nYears * 12))
+        , view = makeView (\rate regPay nYears -> seedCapitalNeeded rate regPay (nYears * 12)) "Withdrawal plan"
         }

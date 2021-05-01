@@ -51,10 +51,12 @@ update msg model =
             }
 
 
-makeView : (Float -> Float -> Int -> Float) -> Model -> Html Msg
-makeView computeBalance model =
+makeView : (Float -> Float -> Int -> Float) -> String -> Model -> Html Msg
+makeView computeBalance name model =
     div []
-        [ label [ for "rate" ] [ text "Interest rate in %" ]
+        [ div [ style "font-weight" "bold" ] [ text name ]
+        , br [] []
+        , label [ for "rate" ] [ text "Interest rate in %" ]
         , br [] []
         , input
             [ id "rate"
