@@ -3,6 +3,7 @@ module CalcTest exposing (..)
 import Calc exposing (..)
 import Expect
 import Test exposing (..)
+import WithdrawalPlan exposing (seedCapitalNeeded)
 
 
 testLast : Test
@@ -32,13 +33,13 @@ testLinearPricesOfYear =
             (\_ ->
                 linearPricesOfYear 1 1
                     |> last
-                    |> Expect.within (Expect.Absolute 1e-5) 1
+                    |> Expect.within (Expect.Absolute 1.0e-5) 1
             )
         , test "of year rate 1.5"
             (\_ ->
                 linearPricesOfYear 1.5 1
                     |> last
-                    |> Expect.within (Expect.Absolute 1e-5) 1.5
+                    |> Expect.within (Expect.Absolute 1.0e-5) 1.5
             )
         ]
 
@@ -50,32 +51,67 @@ testLinearPrices =
             (\_ ->
                 linearPrices 1 10 1
                     |> last
-                    |> Expect.within (Expect.Absolute 1e-5) 1
+                    |> Expect.within (Expect.Absolute 1.0e-5) 1
+            )
+        , test "length"
+            (\_ ->
+                linearPrices 1 10 1
+                    |> List.length
+                    |> Expect.equal 120
             )
         , test "rate 1.05"
             (\_ ->
                 linearPrices 1.05 10 1
                     |> last
-                    |> Expect.within (Expect.Absolute 1e-5) 1.6288946267774
+                    |> Expect.within (Expect.Absolute 1.0e-5) 1.6288946267774
+            )
+        , test "first price"
+            (\_ ->
+                linearPrices 1.05 10 1
+                    |> List.head
+                    |> Maybe.withDefault -1
+                    |> Expect.within (Expect.Absolute 1.0e-7) 1.0041666667
             )
         ]
+
 
 testBalanceFromPrice : Test
 testBalanceFromPrice =
     describe "balance from price"
         [ test "zero payments"
             (\_ ->
-                balanceFromPrices [0, 0, 0] [1, 1, 1]
-                    |> Expect.within (Expect.Absolute 1e-5) 0
+                balanceFromPrices [ 0, 0, 0 ] [ 1, 1, 1 ]
+                    |> Expect.within (Expect.Absolute 1.0e-5) 0
             )
         , test "all one"
             (\_ ->
-                balanceFromPrices [1, 1, 1] [1, 1, 1]
-                    |> Expect.within (Expect.Absolute 1e-5) 3
+                balanceFromPrices [ 1, 1, 1 ] [ 1, 1, 1 ]
+                    |> Expect.within (Expect.Absolute 1.0e-5) 3
             )
-            , test "linear price of year"
+        , test "linear price of year"
             (\_ ->
                 balanceFromPrices (List.repeat 12 100) (linearPrices 1.07 1 1)
-                    |> Expect.within (Expect.Absolute 1e-5) 1237.5595063359
+                    |> Expect.within (Expect.Absolute 1.0e-5) 1237.5595063359
+            )
+        ]
+
+
+testSeed : Test
+testSeed =
+    describe "seed"
+        [ test "rate 1"
+            (\_ ->
+                seedCapitalNeeded 1 10 12
+                    |> Expect.within (Expect.Absolute 1.0e-7) 120
+            )
+        , test "single month"
+            (\_ ->
+                seedCapitalNeeded 1.12 10 1
+                    |> Expect.within (Expect.Absolute 1.0e-7) (10 / 1.01)
+            )
+        , test "two months"
+            (\_ ->
+                seedCapitalNeeded 1.12 10 2
+                    |> Expect.within (Expect.Absolute 1.0e-7) ((10 / 1.01) + (10 / 1.01) / 1.02)
             )
         ]
