@@ -112,6 +112,11 @@ testSeed =
         , test "two months"
             (\_ ->
                 seedCapitalNeeded 1.12 10 2
-                    |> Expect.within (Expect.Absolute 1.0e-7) ((10 / 1.01) + (10 / 1.01) / 1.02)
+                    |> Expect.within (Expect.Absolute 1.0e-5) ((10 / 1.01) + (10 / 1.01) / 1.0099)
+            )
+        , test "50 years"
+            (\_ ->
+                seedCapitalNeeded 1.03 2500 600
+                    |> Expect.greaterThan 600000
             )
         ]
