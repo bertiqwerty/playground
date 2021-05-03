@@ -2,11 +2,7 @@ module SavingsPlan exposing (..)
 
 import Browser
 import Calc exposing (balanceFromPrices, linearPrices)
-import RatePayYearsModel exposing (Msg)
-import RatePayYearsModel exposing (Model)
-import RatePayYearsModel exposing (init)
-import RatePayYearsModel exposing (update)
-import RatePayYearsModel exposing (makeView)
+import RatePayYearsModel exposing (Model, Msg, init, makeView, update)
 
 
 savings : Float -> Float -> Int -> Float
@@ -23,4 +19,8 @@ savings rate regPay nYears =
 
 main : Program () Model Msg
 main =
-    Browser.sandbox { init = init, update = update, view = makeView savings "Savings plan"}
+    Browser.sandbox
+        { init = init
+        , update = update 999
+        , view = makeView savings "Savings plan"
+        }

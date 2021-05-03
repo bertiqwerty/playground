@@ -4,6 +4,7 @@ import Html exposing (Html, br, div, input, label, text)
 import Html.Attributes exposing (for, id, style, value)
 import Html.Events exposing (onInput)
 
+
 type alias Model =
     { rate : Float
     , regularPayment : Float
@@ -18,7 +19,6 @@ init =
     , nYears = 20
     }
 
-    
 
 type Msg
     = ChangedRate String
@@ -26,8 +26,8 @@ type Msg
     | ChangedYears String
 
 
-update : Msg -> Model -> Model
-update msg model =
+update : Int -> Msg -> Model -> Model
+update maxYears msg model =
     case msg of
         ChangedRate newContent ->
             { model
@@ -48,6 +48,13 @@ update msg model =
                 | nYears =
                     String.toInt newContent
                         |> Maybe.withDefault 0
+                        |> (\x ->
+                                if x < maxYears then
+                                    x
+
+                                else
+                                    maxYears
+                           )
             }
 
 
