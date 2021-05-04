@@ -22,5 +22,5 @@ main =
     Browser.sandbox
         { init = init
         , update = update 999
-        , view = makeView savings "Savings plan"
+        , view = makeView savings "Savings plan" "Final capital"
         }

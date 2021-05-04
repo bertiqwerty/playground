@@ -58,8 +58,8 @@ update maxYears msg model =
             }
 
 
-makeView : (Float -> Float -> Int -> Float) -> String -> Model -> Html Msg
-makeView computeBalance name model =
+makeView : (Float -> Float -> Int -> Float) -> String -> String -> Model -> Html Msg
+makeView computeBalance name finalLabel model =
     div []
         [ div [ style "font-weight" "bold" ] [ text name ]
         , br [] []
@@ -90,18 +90,17 @@ makeView computeBalance name model =
             ]
             []
         , br [] []
-        , div [ style "font-weight" "bold" ]
-            [ text
-                (String.fromFloat
-                    ((computeBalance (1 + (model.rate / 100))
-                        model.regularPayment
-                        model.nYears
-                        * 100
-                        |> round
-                        |> toFloat
-                     )
-                        / 100
-                    )
-                )
+        , div [] [ text finalLabel ]
+        , div [style "font-weight" "bold"]
+            [ text (String.fromFloat
+                ((computeBalance (1 + (model.rate / 100))
+                    model.regularPayment
+                    model.nYears
+                    * 100
+                    |> round
+                    |> toFloat
+                 )
+                    / 100
+                ))
             ]
         ]

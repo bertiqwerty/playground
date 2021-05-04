@@ -32,7 +32,7 @@ view model =
         [ table []
             [ tr []
                 [ td []
-                    [ makeView savings "Savings plan" model ]
+                    [ makeView savings "Savings plan" "Accumulated capital " model ]
                 , td
                     [ style "border-left" "thin solid #000000"
                     , style "border-right" "thin solid #000000"
@@ -40,7 +40,7 @@ view model =
                     ]
                     []
                 , td []
-                    [ makeView (\rate regPay nYears -> seedCapitalNeeded rate regPay (nYears * 12)) "Withdrawal plan" model ]
+                    [ makeView (\rate regPay nYears -> seedCapitalNeeded rate regPay (nYears * 12)) "Withdrawal plan" "Seed capital needed " model ]
                 ]
             ]
         ]
