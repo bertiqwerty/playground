@@ -28,11 +28,11 @@ seedCapitalNeeded rate regPay nMonths =
 
 view : Model -> Html Msg
 view model =
-    div []
+    div [style "background-color" "200 100 100"]
         [ table []
             [ tr []
                 [ td []
-                    [ makeView savings "Savings plan" "Accumulated capital " model ]
+                    [ makeView savings "Savings plan" "Resulting capital " model ]
                 , td
                     [ style "border-left" "thin solid #000000"
                     , style "border-right" "thin solid #000000"
