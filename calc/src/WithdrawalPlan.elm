@@ -2,7 +2,11 @@ module WithdrawalPlan exposing (..)
 
 import Browser
 import Calc exposing (linearPrices)
+import Html exposing (Html, div, table, td, tr)
 import RatePayYearsModel exposing (Model, Msg, init, makeView, update)
+import SavingsPlan exposing (savings)
+import Html.Attributes exposing (style)
+import Html exposing (text)
 
 
 seedCapitalNeeded : Float -> Float -> Int -> Float
@@ -23,10 +27,28 @@ seedCapitalNeeded rate regPay nMonths =
     regPay * (List.sum priceProducts + 1 / List.product relativePrices)
 
 
+view : Model -> Html Msg
+view model =
+    div []
+        [ table []
+            [ tr []
+                [ td []
+                    [ makeView savings "Savings plan" model ]
+                , td [style "border-left" "thin solid #000000" 
+                , style "border-right" "thin solid #000000"
+                , style "width" "5%"]
+                    []
+                , td []
+                    [ makeView (\rate regPay nYears -> seedCapitalNeeded rate regPay (nYears * 12)) "Withdrawal plan" model ]
+                ]
+            ]
+        ]
+
+
 main : Program () Model Msg
 main =
     Browser.sandbox
         { init = init
         , update = update 99
-        , view = makeView (\rate regPay nYears -> seedCapitalNeeded rate regPay (nYears * 12)) "Withdrawal plan"
+        , view = view
         }
