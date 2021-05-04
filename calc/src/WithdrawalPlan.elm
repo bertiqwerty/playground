@@ -3,10 +3,9 @@ module WithdrawalPlan exposing (..)
 import Browser
 import Calc exposing (linearPrices)
 import Html exposing (Html, div, table, td, tr)
+import Html.Attributes exposing (style)
 import RatePayYearsModel exposing (Model, Msg, init, makeView, update)
 import SavingsPlan exposing (savings)
-import Html.Attributes exposing (style)
-import Html exposing (text)
 
 
 seedCapitalNeeded : Float -> Float -> Int -> Float
@@ -34,9 +33,11 @@ view model =
             [ tr []
                 [ td []
                     [ makeView savings "Savings plan" model ]
-                , td [style "border-left" "thin solid #000000" 
-                , style "border-right" "thin solid #000000"
-                , style "width" "5%"]
+                , td
+                    [ style "border-left" "thin solid #000000"
+                    , style "border-right" "thin solid #000000"
+                    , style "width" "5%"
+                    ]
                     []
                 , td []
                     [ makeView (\rate regPay nYears -> seedCapitalNeeded rate regPay (nYears * 12)) "Withdrawal plan" model ]
