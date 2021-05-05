@@ -35,7 +35,7 @@ seedCapitalNeeded rate regPay nMonths =
 view : Model -> Html Msg
 view model =
     let
-        seedCapitalinYears rate regPay nYears =
+        seedCapitalYears rate regPay nYears =
             seedCapitalNeeded rate regPay (nYears * 12)
     in
     div [ style "background-color" "200 100 100" ]
@@ -50,7 +50,7 @@ view model =
                     ]
                     []
                 , td []
-                    [ makeView seedCapitalinYears "Withdrawal plan" "Seed capital needed " model ]
+                    [ makeView seedCapitalYears "Withdrawal plan" "Seed capital needed " model ]
                 ]
             ]
         ]
