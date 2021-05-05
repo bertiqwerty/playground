@@ -11,24 +11,34 @@ import SavingsPlan exposing (savings)
 seedCapitalNeeded : Float -> Float -> Int -> Float
 seedCapitalNeeded rate regPay nMonths =
     let
+        startCapital =
+            1
+
         prices =
-            List.take nMonths (linearPrices rate (ceiling (toFloat nMonths / 12)) 1)
+            List.take nMonths (linearPrices rate (ceiling (toFloat nMonths / 12)) startCapital)
 
         shiftedPrices =
-            List.concat [ [ 1 ], List.take (List.length prices - 1) prices ]
+            List.concat [ [ startCapital ], List.take (List.length prices - 1) prices ]
 
         relativePrices =
             List.map2 (\x y -> x / y) prices shiftedPrices
 
+        mapping k =
+            1 / (List.take k relativePrices |> List.product)
+
         priceProducts =
-            List.map (\k -> 1 / (List.take k relativePrices |> List.product)) (List.range 1 (List.length relativePrices - 1))
+            List.map mapping (List.range 1 (List.length relativePrices - 1))
     in
     regPay * (List.sum priceProducts + 1 / List.product relativePrices)
 
 
 view : Model -> Html Msg
 view model =
-    div [style "background-color" "200 100 100"]
+    let
+        seedCapitalinYears rate regPay nYears =
+            seedCapitalNeeded rate regPay (nYears * 12)
+    in
+    div [ style "background-color" "200 100 100" ]
         [ table []
             [ tr []
                 [ td []
@@ -40,7 +50,7 @@ view model =
                     ]
                     []
                 , td []
-                    [ makeView (\rate regPay nYears -> seedCapitalNeeded rate regPay (nYears * 12)) "Withdrawal plan" "Seed capital needed " model ]
+                    [ makeView seedCapitalinYears "Withdrawal plan" "Seed capital needed " model ]
                 ]
             ]
         ]
