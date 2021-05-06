@@ -32,34 +32,15 @@ seedCapitalNeeded rate regPay nMonths =
     regPay * (List.sum priceProducts + 1 / List.product relativePrices)
 
 
-view : Model -> Html Msg
-view model =
-    let
-        seedCapitalYears rate regPay nYears =
-            seedCapitalNeeded rate regPay (nYears * 12)
-    in
-    div [ style "background-color" "200 100 100" ]
-        [ table []
-            [ tr []
-                [ td []
-                    [ makeView savings "Savings plan" "Resulting capital " model ]
-                , td
-                    [ style "border-left" "thin solid #000000"
-                    , style "border-right" "thin solid #000000"
-                    , style "width" "5%"
-                    ]
-                    []
-                , td []
-                    [ makeView seedCapitalYears "Withdrawal plan" "Seed capital needed " model ]
-                ]
-            ]
-        ]
+seedCapitalYears : Float -> Float -> Int -> Float
+seedCapitalYears rate regPay nYears =
+    seedCapitalNeeded rate regPay (nYears * 12)
 
 
 main : Program () Model Msg
 main =
     Browser.sandbox
         { init = init
-        , update = update 99
-        , view = view
+        , update = update 999
+        , view = makeView seedCapitalYears "Withdrawal plan" "Seed capital needed "
         }
