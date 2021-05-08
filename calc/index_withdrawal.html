@@ -11,11 +11,11 @@
             font-size: 9pt;
             font-family: 'Open Sans';
         }
-        
+
         input {
             font-family: 'Open Sans';
         }
-        
+
         img {
             border: 1px solid white;
             margin: 5px;
@@ -45,6 +45,26 @@
             font-family: Verdana;
             color: #60b5cc;
         }
+
+        td {
+            vertical-align: top;
+        }
+
+        .top {
+            font-weight: bold;
+        }
+
+        .result {
+            font-weight: bold;
+        }
+
+        .winputdummy {
+            visibility: hidden;
+        }
+
+        .wlabeldummy {
+            visibility: hidden;
+        }
     </style>
 </head>
 
@@ -59,7 +79,7 @@
             </td>
         </tr>
     </table>
-    <script src="elm.js"></script>
+    <script src="app.js"></script>
     <script>
         Elm.WithdrawalPlan.init({ node: document.getElementById("withdrawal") });
         Elm.SavingsPlan.init({ node: document.getElementById("savings") });

@@ -2,6 +2,7 @@ module CalcTest exposing (..)
 
 import Calc exposing (..)
 import Expect
+import SavingsPlan exposing (savings)
 import Test exposing (..)
 import WithdrawalPlan exposing (seedCapitalNeeded)
 
@@ -80,17 +81,17 @@ testBalanceFromPrice =
     describe "balance from price"
         [ test "zero payments"
             (\_ ->
-                balanceFromPrices [ 0, 0, 0 ] [ 1, 1, 1 ]
+                balanceFromPrices [ 0, 0, 0 ] [ 1, 1, 1 ] 0
                     |> Expect.within (Expect.Absolute 1.0e-5) 0
             )
         , test "all one"
             (\_ ->
-                balanceFromPrices [ 1, 1, 1 ] [ 1, 1, 1 ]
+                balanceFromPrices [ 1, 1, 1 ] [ 1, 1, 1 ] 0
                     |> Expect.within (Expect.Absolute 1.0e-5) 3
             )
         , test "linear price of year"
             (\_ ->
-                balanceFromPrices (List.repeat 12 100) (linearPrices 1.07 1 1)
+                balanceFromPrices (List.repeat 12 100) (linearPrices 1.07 1 1) 0
                     |> Expect.within (Expect.Absolute 1.0e-5) 1237.5595063359
             )
         ]
@@ -101,22 +102,33 @@ testSeed =
     describe "seed"
         [ test "rate 1"
             (\_ ->
-                seedCapitalNeeded 1 10 12
+                seedCapitalNeeded 1 10 12 0
                     |> Expect.within (Expect.Absolute 1.0e-7) 120
             )
         , test "single month"
             (\_ ->
-                seedCapitalNeeded 1.12 10 1
+                seedCapitalNeeded 1.12 10 1 0
                     |> Expect.within (Expect.Absolute 1.0e-7) (10 / 1.01)
             )
         , test "two months"
             (\_ ->
-                seedCapitalNeeded 1.12 10 2
+                seedCapitalNeeded 1.12 10 2 0
                     |> Expect.within (Expect.Absolute 1.0e-5) ((10 / 1.01) + (10 / 1.01) / 1.0099)
             )
         , test "50 years"
             (\_ ->
-                seedCapitalNeeded 1.03 2500 600
+                seedCapitalNeeded 1.03 2500 600 0
                     |> Expect.greaterThan 600000
+            )
+        ]
+
+
+testSavings : Test
+testSavings =
+    describe "savings"
+        [ test "intial capital"
+            (\_ ->
+                savings 1.05 0 30 100
+                    |> Expect.within (Expect.Absolute 1.0e-7) (100 * 1.05 ^ 30)
             )
         ]

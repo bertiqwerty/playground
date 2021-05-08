@@ -1,12 +1,13 @@
 module RatePayYearsModel exposing (..)
 
-import Html exposing (Html, br, div, input, label, text)
-import Html.Attributes exposing (for, id, style, value)
+import Html exposing (Html, br, div, input, label, table, td, text, tr)
+import Html.Attributes exposing (class, colspan, for, id, style, value)
 import Html.Events exposing (onInput)
 
 
 type alias Model =
-    { rate : Float
+    { initialCapital : Float
+    , rate : Float
     , regularPayment : Float
     , nYears : Int
     }
@@ -14,7 +15,8 @@ type alias Model =
 
 init : Model
 init =
-    { rate = 5
+    { initialCapital = 0
+    , rate = 5
     , regularPayment = 100
     , nYears = 20
     }
@@ -24,6 +26,7 @@ type Msg
     = ChangedRate String
     | ChangedRegPay String
     | ChangedYears String
+    | ChangedInitialCapital String
 
 
 update : Int -> Msg -> Model -> Model
@@ -57,50 +60,121 @@ update maxYears msg model =
                            )
             }
 
+        ChangedInitialCapital newContent ->
+            { model
+                | initialCapital =
+                    String.toFloat newContent
+                        |> Maybe.withDefault 0
+            }
 
-makeView : (Float -> Float -> Int -> Float) -> String -> String -> Model -> Html Msg
-makeView computeBalance name finalLabel model =
+
+makeView : (Float -> Float -> Int -> Float -> Float) -> String -> String -> Bool -> Model -> Html Msg
+makeView computeBalance name finalLabel withInitialCapital model =
+    let
+        firstChildren =
+            if withInitialCapital then
+                [ tr []
+                    [ td [ class "wlabel" ]
+                        [ label [ for "initialCapital" ] [ text "Initial capital" ]
+                        ]
+                    ]
+                , tr []
+                    [ td [ class "winput" ]
+                        [ input
+                            [ id "initialCapital"
+                            , value (String.fromFloat model.initialCapital)
+                            , onInput ChangedInitialCapital
+                            ]
+                            []
+                        ]
+                    ]
+                ]
+
+            else
+                [ tr []
+                    [ td [ class "wlabeldummy" ]
+                        [ label [] [ text "-" ] ]
+                    ]
+                , tr []
+                    [ td [ class "winputdummy" ]
+                        [ input
+                            [ value "-"
+                            ]
+                            []
+                        ]
+                    ]
+                ]
+    in
     div []
-        [ div [ style "font-weight" "bold" ] [ text name ]
-        , br [] []
-        , label [ for "rate" ] [ text "Interest rate in %" ]
-        , br [] []
-        , input
-            [ id "rate"
-            , value (String.fromFloat model.rate)
-            , onInput ChangedRate
-            ]
-            []
-        , br [] []
-        , label [ for "regpay" ] [ text "Payment each month" ]
-        , br [] []
-        , input
-            [ id "regpay"
-            , value (String.fromFloat model.regularPayment)
-            , onInput ChangedRegPay
-            ]
-            []
-        , br [] []
-        , label [ for "years" ] [ text "Years" ]
-        , br [] []
-        , input
-            [ id "years"
-            , value (String.fromInt model.nYears)
-            , onInput ChangedYears
-            ]
-            []
-        , br [] []
-        , div [] [ text finalLabel ]
-        , div [style "font-weight" "bold"]
-            [ text (String.fromFloat
-                ((computeBalance (1 + (model.rate / 100))
-                    model.regularPayment
-                    model.nYears
-                    * 100
-                    |> round
-                    |> toFloat
-                 )
-                    / 100
-                ))
-            ]
+        [ table []
+            (tr [] [ td [ class "top" ] [ text name ] ]
+                :: firstChildren
+                ++ [ tr []
+                        [ td [ class "wlabel" ]
+                            [ label [ for "rate" ] [ text "Interest rate in %" ]
+                            ]
+                        ]
+                   , tr []
+                        [ td [ class "winput" ]
+                            [ input
+                                [ id "rate"
+                                , value (String.fromFloat model.rate)
+                                , onInput ChangedRate
+                                ]
+                                []
+                            ]
+                        ]
+                   , tr []
+                        [ td [ class "wlabel" ]
+                            [ label [ for "regpay" ] [ text "Payment each month" ]
+                            ]
+                        ]
+                   , tr []
+                        [ td [ class "winput" ]
+                            [ input
+                                [ id "regpay"
+                                , value (String.fromFloat model.regularPayment)
+                                , onInput ChangedRegPay
+                                ]
+                                []
+                            ]
+                        ]
+                   , tr []
+                        [ td [ class "wlabel" ]
+                            [ label [ for "years" ] [ text "Years" ]
+                            ]
+                        ]
+                   , tr []
+                        [ td [ class "winput" ]
+                            [ input
+                                [ id "years"
+                                , value (String.fromInt model.nYears)
+                                , onInput ChangedYears
+                                ]
+                                []
+                            ]
+                        ]
+                   , tr []
+                        [ td [ ]
+                            [ text finalLabel ]
+                        ]
+                   , tr []
+                        [ td [ class "result" ]
+                            [ text
+                                (String.fromFloat
+                                        ((computeBalance (1 + (model.rate / 100))
+                                            model.regularPayment
+                                            model.nYears
+                                            model.initialCapital
+                                            * 100
+                                            |> round
+                                            |> toFloat
+                                         )
+                                            / 100
+                                        )
+                                )
+                            ]
+                        ]
+                   ]
+            )
         ]

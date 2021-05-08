@@ -42,13 +42,15 @@ linearPricesOfYear rate startPrice =
         |> List.map (\i -> startPrice + (i + 1) * priceIncrease)
 
 
-balanceFromPrices : List Float -> List Float -> Float
-balanceFromPrices payments prices =
+balanceFromPrices : List Float -> List Float -> Float -> Float
+balanceFromPrices payments prices initialCapital =
     let
         payces =
             List.map2 Tuple.pair payments prices
     in
-    last prices
-        * (List.map (\( pa, pr ) -> pa / pr) payces
-            |> List.sum
-          )
+    ((List.map (\( pa, pr ) -> pa / pr) payces
+        |> List.sum
+     )
+        + initialCapital
+    )
+        * last prices
