@@ -35,11 +35,11 @@ linearPricesOfYear rate startPrice =
             12
 
         priceIncrease =
-            (startPrice * rate - startPrice) / toFloat nMonths
+            (rate - 1) / toFloat nMonths
     in
     List.range 0 (nMonths - 1)
         |> List.map (\i -> toFloat i)
-        |> List.map (\i -> startPrice + (i + 1) * priceIncrease)
+        |> List.map (\i -> startPrice * (1 + (i + 1) * priceIncrease))
 
 
 balanceFromPrices : List Float -> List Float -> Float -> Float

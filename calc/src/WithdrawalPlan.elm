@@ -2,7 +2,13 @@ module WithdrawalPlan exposing (..)
 
 import Browser
 import Calc exposing (linearPrices)
+import List.Extra
 import RatePayYearsModel exposing (Model, Msg, init, makeView, update)
+
+
+maxYears : Int
+maxYears =
+    399
 
 
 seedCapitalNeeded : Float -> Float -> Int -> Float -> Float
@@ -11,8 +17,11 @@ seedCapitalNeeded rate regPay nMonths _ =
         startCapital =
             1
 
+        checkedLinearPrices =
+            linearPrices rate (ceiling (toFloat nMonths / 12)) startCapital
+
         prices =
-            List.take nMonths (linearPrices rate (ceiling (toFloat nMonths / 12)) startCapital)
+            List.take nMonths checkedLinearPrices
 
         shiftedPrices =
             List.concat [ [ startCapital ], List.take (List.length prices - 1) prices ]
@@ -20,11 +29,10 @@ seedCapitalNeeded rate regPay nMonths _ =
         relativePrices =
             List.map2 (\x y -> x / y) prices shiftedPrices
 
-        mapping k =
-            1 / (List.take k relativePrices |> List.product)
-
         priceProducts =
-            List.map mapping (List.range 1 (List.length relativePrices - 1))
+            List.take (List.length relativePrices - 1) relativePrices
+                |> List.Extra.scanl1 (*)
+                |> List.map (\v -> 1 / v)
     in
     regPay * (List.sum priceProducts + 1 / List.product relativePrices)
 
@@ -38,6 +46,6 @@ main : Program () Model Msg
 main =
     Browser.sandbox
         { init = init
-        , update = update 399
+        , update = update maxYears
         , view = makeView seedCapitalYears "Withdrawal plan" "Seed capital needed " False
         }
