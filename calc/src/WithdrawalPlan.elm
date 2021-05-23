@@ -8,7 +8,7 @@ import RatePayYearsModel exposing (Model, Msg, init, makeView, update)
 
 maxYears : Int
 maxYears =
-    399
+    999
 
 
 seedCapitalNeeded : Float -> Float -> Int -> Float -> Float
