@@ -31,6 +31,10 @@ type Msg
 
 update : Int -> Msg -> Model -> Model
 update maxYears msg model =
+    let
+        makePositive x = if x < 0  then -x else x
+    in
+    
     case msg of
         ChangedRate newContent ->
             { model
@@ -44,6 +48,7 @@ update maxYears msg model =
                 | regularPayment =
                     String.toFloat newContent
                         |> Maybe.withDefault 0
+                        |> makePositive
             }
 
         ChangedYears newContent ->
@@ -58,6 +63,7 @@ update maxYears msg model =
                                 else
                                     maxYears
                            )
+                        |> makePositive
             }
 
         ChangedInitialCapital newContent ->
@@ -65,6 +71,7 @@ update maxYears msg model =
                 | initialCapital =
                     String.toFloat newContent
                         |> Maybe.withDefault 0
+                        |> makePositive
             }
 
 
