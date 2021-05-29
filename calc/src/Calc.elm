@@ -1,4 +1,4 @@
-module Calc exposing (balanceFromPrices, last, linearPrices, linearPricesOfYear)
+module Calc exposing (balanceFromPrices, last, linearPrices, linearPricesOfYear, relativePrices)
 
 import Array
 
@@ -26,6 +26,15 @@ linearPrices rate nYears startPrice =
                 []
     in
     recurse 0 [ startPrice ]
+
+
+relativePrices : List Float -> Float -> List Float
+relativePrices prices startPrice =
+    let
+        shiftedPrices =
+            List.concat [ [ startPrice ], List.take (List.length prices - 1) prices ]
+    in
+    List.map2 (\x y -> x / y) prices shiftedPrices
 
 
 linearPricesOfYear : Float -> Float -> List Float

@@ -1,7 +1,7 @@
 module WithdrawalPlan exposing (..)
 
 import Browser
-import Calc exposing (linearPrices)
+import Calc exposing (linearPrices, relativePrices)
 import List.Extra
 import RatePayYearsModel exposing (Model, Msg, init, makeView, update)
 
@@ -17,24 +17,21 @@ seedCapitalNeeded rate regPay nMonths _ =
         startCapital =
             1
 
-        checkedLinearPrices =
+        linearPricesFullYears =
             linearPrices rate (ceiling (toFloat nMonths / 12)) startCapital
 
         prices =
-            List.take nMonths checkedLinearPrices
+            List.take nMonths linearPricesFullYears
 
-        shiftedPrices =
-            List.concat [ [ startCapital ], List.take (List.length prices - 1) prices ]
-
-        relativePrices =
-            List.map2 (\x y -> x / y) prices shiftedPrices
+        relPrices =
+            relativePrices prices 1
 
         priceProducts =
-            List.take (List.length relativePrices - 1) relativePrices
+            List.take (List.length relPrices - 1) relPrices
                 |> List.Extra.scanl1 (*)
                 |> List.map (\v -> 1 / v)
     in
-    regPay * (List.sum priceProducts + 1 / List.product relativePrices)
+    regPay * (List.sum priceProducts + 1 / List.product relPrices)
 
 
 seedCapitalYears : Float -> Float -> Int -> Float -> Float
