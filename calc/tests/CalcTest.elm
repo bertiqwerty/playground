@@ -76,27 +76,6 @@ testLinearPrices =
         ]
 
 
-testBalanceFromPrice : Test
-testBalanceFromPrice =
-    describe "balance from price"
-        [ test "zero payments"
-            (\_ ->
-                balanceFromPrices [ 0, 0, 0 ] [ 1, 1, 1 ] 0
-                    |> Expect.within (Expect.Absolute 1.0e-5) 0
-            )
-        , test "all one"
-            (\_ ->
-                balanceFromPrices [ 1, 1, 1 ] [ 1, 1, 1 ] 0
-                    |> Expect.within (Expect.Absolute 1.0e-5) 3
-            )
-        , test "linear price of year"
-            (\_ ->
-                balanceFromPrices (List.repeat 12 100) (linearPrices 1.07 1 1) 0
-                    |> Expect.within (Expect.Absolute 1.0e-5) 1237.5595063359
-            )
-        ]
-
-
 testSeed : Test
 testSeed =
     describe "seed"
