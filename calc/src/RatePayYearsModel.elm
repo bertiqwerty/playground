@@ -48,7 +48,6 @@ update maxYears msg model =
                 | regularPayment =
                     String.toFloat newContent
                         |> Maybe.withDefault 0
-                        |> makePositive
             }
 
         ChangedYears newContent ->

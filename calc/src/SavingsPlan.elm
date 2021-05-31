@@ -1,20 +1,31 @@
 module SavingsPlan exposing (..)
 
 import Browser
-import Calc exposing (balanceFromPrices, linearPrices)
+import Calc exposing (linearPrices, relativePrices)
+import List.Extra
 import RatePayYearsModel exposing (Model, Msg, init, makeView, update)
 
 
 savings : Float -> Float -> Int -> Float -> Float
 savings rate regPay nYears initialCapital =
     let
-        prices =
-            linearPrices rate nYears 1
+        startPrice =
+            1
 
-        payments =
-            List.repeat (nYears * 12) regPay
+        prices =
+            linearPrices rate nYears startPrice
+
+        relPrices =
+            relativePrices prices startPrice
+
+        tailRelPrices =
+            List.tail relPrices |> Maybe.withDefault []
+
+        partialProds =
+            List.reverse tailRelPrices |> List.Extra.scanl1 (*)
+        
     in
-    balanceFromPrices payments prices initialCapital
+    initialCapital * List.product relPrices + regPay * (List.sum partialProds + 1)
 
 
 main : Program () Model Msg

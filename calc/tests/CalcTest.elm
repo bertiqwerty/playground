@@ -125,10 +125,28 @@ testSeed =
 
 testSavings : Test
 testSavings =
+    let
+        rate =
+            1.05
+
+        regPay =
+            100
+
+        nYears =
+            1
+
+        sc =
+            seedCapitalNeeded rate regPay (nYears * 12) 0
+    in
     describe "savings"
-        [ test "intial capital"
+        [ test "initial capital"
             (\_ ->
-                savings 1.05 0 30 100
-                    |> Expect.within (Expect.Absolute 1.0e-7) (100 * 1.05 ^ 30)
+                savings rate 0 nYears 100
+                    |> Expect.within (Expect.Absolute 1.0e-7) (100 * rate ^ nYears)
+            )
+        , test "withdrawal"
+            (\_ ->
+                savings rate -regPay nYears sc
+                    |> Expect.within (Expect.Absolute 1.0e-5) 0
             )
         ]

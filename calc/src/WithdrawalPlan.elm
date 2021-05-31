@@ -14,17 +14,16 @@ maxYears =
 seedCapitalNeeded : Float -> Float -> Int -> Float -> Float
 seedCapitalNeeded rate regPay nMonths _ =
     let
-        startCapital =
-            1
+        startPrice = 1
 
         linearPricesFullYears =
-            linearPrices rate (ceiling (toFloat nMonths / 12)) startCapital
+            linearPrices rate (ceiling (toFloat nMonths / 12)) startPrice
 
         prices =
             List.take nMonths linearPricesFullYears
 
         relPrices =
-            relativePrices prices 1
+            relativePrices prices startPrice
 
         priceProducts =
             List.take (List.length relPrices - 1) relPrices
